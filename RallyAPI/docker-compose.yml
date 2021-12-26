@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
 volumes:
   db-store:
   php-fpm-socket:
@@ -17,7 +17,6 @@ services:
     volumes:
       - php-fpm-socket:/var/run/php-fpm
       - ../laravel:/work/laravel
-    restart: always
 
   db:
     build: ./docker/mysql
