@@ -24,3 +24,5 @@ Route::group(['prefix'=>'/start','as'=>'start.'],function(){
     Route::get('/delete','api\createController@startDelete')->name('delete');
 
 });
+//画像を保存して、PATHを返す
+Route::post('/createPict','api\createController@createPict')->name('createPict');
