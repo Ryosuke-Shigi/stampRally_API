@@ -17,7 +17,7 @@ services:
     volumes:
       - php-fpm-socket:/var/run/php-fpm
       - ../laravel:/work/laravel
-
+    restart: always
   db:
     build: ./docker/mysql
     volumes:
