@@ -12,6 +12,7 @@
         "aws/aws-sdk-php": "^3.208",
         "doctrine/dbal": "2.*",
         "fideloper/proxy": "^4.4",
+        "goldspecdigital/laravel-eloquent-uuid": "^6.0",
         "laravel/framework": "^6.20.26",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "~1.0",

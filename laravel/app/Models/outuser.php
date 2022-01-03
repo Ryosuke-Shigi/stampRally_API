@@ -5,8 +5,9 @@ namespace App\models;
 use Illuminate\Database\Eloquent\Model;
 //use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
 
-class start extends Model
+class outuser extends Model
 {
     //
-    protected $table = "starts";
+    protected $table = "outusers";
+
 }
