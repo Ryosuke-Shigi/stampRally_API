@@ -39,6 +39,8 @@ Route::group(['prefix'=>'/point','as'=>'start.'],function(){
     Route::post('/create','api\createController@pointCreate')->name('create');
     //ポイント削除
     Route::get('/delete','api\createController@pointDelete')->name('delete');
+    //point_total_num カウント
+    Route::get('/point_total_num','api\createController@point_total_num')->name('point_total_num');
 });
 
 //ゴール作成・削除

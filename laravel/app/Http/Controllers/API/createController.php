@@ -126,13 +126,30 @@ class createController extends BaseController
     public function goalCreate(REQUEST $request){
         $table = new goal;
         DB::beginTransaction();
+        try{
+            //point数を数えて route の point_total_num（初期値：０）を更新する
+            //ポイントを数える
+            $point_total_num=DB::table('points')
+            ->where('route_code','=',$request->route_code)
+            ->count();
+            //routeをfirst()で取得
+            dump("テスト");
+
+            $routeTable = route::where('connect_id','=',$request->connect_id)
+                                ->where('route_code','=',$request->route_code)
+                                ->first();
+            $routeTable->point_total_num = $point_total_num;
+            $routeTable->save();
+
+
+            //ゴールをを保存する
             $table->connect_id  = $request->connect_id;
             $table->route_code  = $request->route_code;
             $table->pict        = $request->pict;
             $table->text        = $request->text;
-        try{
-
             $table->save();
+
+
             DB::commit();
 
         }catch(Esception $exception){
@@ -140,9 +157,31 @@ class createController extends BaseController
             throw $exception;
             return $this->_error(1);
         }
+
         return $this->_success(['route_code'=>$table->route_code]);
     }
 
+
+
+
+
+
+
+
+
+
+    //指定コースのポイント数をカウントして返す
+    //connect_idとroute_codeが必要
+    public function Point_total_num(REQUEST $request){
+        //もしroute_codeがなければエラー
+        if(!$request->has('route_code')){
+                return $this->_error(1);
+        }
+        $point_total_num=DB::table('points')
+            ->where('route_code','=',$request->route_code)
+            ->count();
+        return $this->_success(['point_total_num'=>$point_total_num]);
+    }
 
 
 
