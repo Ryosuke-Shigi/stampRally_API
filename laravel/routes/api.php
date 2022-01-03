@@ -17,12 +17,42 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix'=>'/start','as'=>'start.'],function(){
+//ルート作成・削除
+Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     //スタートポイント登録
-    Route::post('/create','api\createController@startCreate')->name('create');
+    Route::post('/create','api\createController@routeCreate')->name('create');
     //スタートポイント削除
-    Route::get('/delete','api\createController@startDelete')->name('delete');
-
+    Route::get('/delete','api\createController@routeDelete')->name('delete');
 });
+
+//スタート作成・削除(２０２１　１　１現在　削除はルート削除だけでいい)
+Route::group(['prefix'=>'/start','as'=>'start.'],function(){
+    //スタート登録
+    Route::post('/create','api\createController@startCreate')->name('create');
+    //スタート削除
+    Route::get('/delete','api\createController@startDelete')->name('delete');
+});
+
+//ポイント作成・削除
+Route::group(['prefix'=>'/point','as'=>'start.'],function(){
+    //ポイント登録
+    Route::post('/create','api\createController@pointCreate')->name('create');
+    //ポイント削除
+    Route::get('/delete','api\createController@pointDelete')->name('delete');
+});
+
+//ゴール作成・削除
+Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
+    //ゴール設定
+    Route::post('/create','api\createController@goalCreate')->name('create');
+    //ゴール削除（必要かどうか）
+    Route::get('/delete','api\createController@goalDelete')->name('delete');
+});
+
+
+
+//ユーザを作成して、コンタクト用 connect_id の値を返す
+Route::post('/createUser','api\createController@createUser')->name('createUser');
+
 //画像を保存して、PATHを返す
 Route::post('/createPict','api\createController@createPict')->name('createPict');
