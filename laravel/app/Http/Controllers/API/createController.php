@@ -133,8 +133,6 @@ class createController extends BaseController
             ->where('route_code','=',$request->route_code)
             ->count();
             //routeをfirst()で取得
-            dump("テスト");
-
             $routeTable = route::where('connect_id','=',$request->connect_id)
                                 ->where('route_code','=',$request->route_code)
                                 ->first();
@@ -186,7 +184,7 @@ class createController extends BaseController
 
 
 
-    //Connect_IDとroute_IDを受け取り、スタートを削除する
+    //Connect_IDとroute_IDを受け取り、ルートを削除する
     public function routeDelete(REQUEST $request){
         //作成していたPOINTのデータを全て削除する
         $pointData=DB::table('points')
@@ -212,9 +210,35 @@ class createController extends BaseController
         ->where('route_code','=',$request->route_code)
         ->delete();
         return $this->_success();
+
     }
 
 
+    //ヒュベニ
+    //メートルで産出
+    private function reDistance($lat1,$lng1,$lat2,$lng2){
+        //赤道半径
+        $GRS80_A = 6378137.000;
+        //第一遠心率　eの２乗
+        $GRS80_E2 = 0.00667436061028297;
+        $GRS80_MNUM = 6334832.10663254;
+
+        //経度の平均値
+        $mu_y = deg2rad($lat1 + $lat2)/2;
+        $W = sqrt(1-$GRS80_E2*pow(sin($mu_y),2));
+        $W3 = $W*$W*$W;
+        $M = $GRS80_MNUM/$W3;
+        $N = $GRS80_A/$W;
+        //緯度の差
+        $dx = deg2rad($lng1 - $lng2);
+        //経度の差
+        $dy = deg2rad($lat1 - $lat2);
+
+        // 距離をmで算出
+        $dist = sqrt(pow($dy*$M,2) + pow($dx*$N*cos($mu_y),2));
+
+        return $dist;
+    }
 
 
 
