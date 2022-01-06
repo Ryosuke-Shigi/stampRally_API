@@ -24,9 +24,7 @@ class CreateGoalsTable extends Migration
             $table->string("pict")->nullable(true);
             //紹介文
             $table->string("text")->nullable(true);
-
             $table->softDeletes();
-
             $table->timestamps();
 
             //outusersと外部制約
