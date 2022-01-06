@@ -24,10 +24,16 @@ class CreateRoutesTable extends Migration
             $table->string('route_name')->nullable(false);
             //pointのトータル数
             $table->integer('point_total_num')->default(0);
-/*             //ルートの種類
-            $table->integer('kind')->default(0);
+            //画像
+            $table->string("pict")->nullable(true);
+            //紹介文
+            $table->string("text")->nullable(true);
             //公開・非公開
-            $table->integer('published')->default(0); */
+            $table->integer('published')->default(0);
+            //検索キーワード　非公開でもキーワードでひっかけられる
+            $table->string('keyword')->nullable(true);
+/*             //ルートの種類
+            $table->integer('kind')->default(0);*/
             //deleted_atが追加される
             $table->softDeletes();
             $table->timestamps();

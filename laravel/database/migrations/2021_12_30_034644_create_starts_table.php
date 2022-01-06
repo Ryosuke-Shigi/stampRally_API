@@ -20,10 +20,6 @@ class CreateStartsTable extends Migration
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
             $table->string('route_code')->nullable(false);
-            //緯度　１２．３４５６７８９　まで保存できる　誤差１ｃｍ
-            $table->double('latitude',9,7)->nullable(false);
-            //経度　１２３．４５６７８９Ａ　まで保存できる　誤差１ｃｍ
-            $table->double('longitude',10,7)->nullable(false);
             //画像
             $table->string("pict")->nullable(true);
             //紹介文
