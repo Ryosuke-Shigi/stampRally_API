@@ -48,8 +48,8 @@ Route::group(['prefix'=>'/point','as'=>'start.'],function(){
     //point_total_num カウント
     Route::get('/point_total_num','api\gameController@point_total_num')->name('point_total_num');
 
-    //全てのポイントを返す（ほぼテスト用）
-    Route::post('/allPoints','api\gameController@allPoints')->name('allPoints');
+    //チェックポイントを返す
+    Route::post('/callPoints','api\gameController@callPoints')->name('callPoints');
 
 });
 //ゴール作成・削除
