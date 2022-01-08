@@ -113,7 +113,6 @@ class gameController extends BaseController
                 foreach($userStamp as $stamp){
                     if($route->point_no === $stamp->point_no){
                         $stampFlg = true;
-                        dump("ひっかかたよ");
                         continue;
                     }
                 }
