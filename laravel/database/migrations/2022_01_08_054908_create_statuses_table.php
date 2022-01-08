@@ -28,7 +28,7 @@ class CreateStatusesTable extends Migration
             //ルートのコード
             $table->string('route_code')->nullable(false);
             //開始日時が登録される
-            $table->datetime('started_at')->nullable()->change();
+            $table->datetime('started_at')->nullable(true);
 
             $table->softDeletes();
             $table->timestamps();

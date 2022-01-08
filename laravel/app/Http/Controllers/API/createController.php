@@ -117,6 +117,7 @@ class createController extends BaseController
             $table->pict        = $request->pict;
             $table->text        = $request->text;
             $table->save();
+            dump($table);
             DB::commit();
 
         }catch(Esception $exception){
