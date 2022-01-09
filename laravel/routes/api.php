@@ -32,13 +32,7 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     Route::post('/keySearchRoutes','api\gameController@keySearchRoutes')->name('keySearchRoutes');
 
 });
-/* //スタート作成・削除(２０２１　１　１現在　削除はルート削除だけでいい)
-Route::group(['prefix'=>'/start','as'=>'start.'],function(){
-    //スタート登録
-    Route::post('/create','api\createController@startCreate')->name('create');
-    //スタート削除
-    Route::get('/delete','api\createController@startDelete')->name('delete');
-}); */
+
 //ポイント作成・削除
 Route::group(['prefix'=>'/point','as'=>'start.'],function(){
     //ポイント登録
@@ -47,10 +41,8 @@ Route::group(['prefix'=>'/point','as'=>'start.'],function(){
     Route::get('/delete','api\createController@pointDelete')->name('delete');
     //point_total_num カウント
     Route::get('/point_total_num','api\gameController@point_total_num')->name('point_total_num');
-
     //チェックポイントを返す
     Route::post('/callPoints','api\gameController@callPoints')->name('callPoints');
-
 });
 //ゴール作成・削除
 Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
@@ -59,6 +51,18 @@ Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
     //ゴール削除（必要かどうか）
     Route::get('/delete','api\createController@goalDelete')->name('delete');
 });
+
+
+//stamp関連
+Route::group(['prefix'=>'/game','as'=>'game.'],function(){
+    //pointをチェックする　条件を満たしていればstampレコードを作成する
+    Route::get('/pointJudge','api\gameController@pointJudge')->name('pointJudge');
+
+
+});
+
+
+
 
 //ユーザを作成して、コンタクト用 connect_id の値を返す
 Route::post('/createUser','api\createController@createUser')->name('createUser');
