@@ -50,13 +50,16 @@ Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
     Route::post('/create','api\createController@goalCreate')->name('create');
     //ゴール削除（必要かどうか）
     Route::get('/delete','api\createController@goalDelete')->name('delete');
+
+    //ゴールのデータを返す　route_code　が必要
+    Route::post('/callGoal','api\gameController@callGoal')->name('callGoal');
 });
 
 
 //stamp関連
 Route::group(['prefix'=>'/game','as'=>'game.'],function(){
     //pointをチェックする　条件を満たしていればstampレコードを作成する
-    Route::get('/pointJudge','api\gameController@pointJudge')->name('pointJudge');
+    Route::post('/pointJudge','api\gameController@pointJudge')->name('pointJudge');
 
 
 });
