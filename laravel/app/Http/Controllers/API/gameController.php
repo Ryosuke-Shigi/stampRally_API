@@ -58,6 +58,21 @@ class gameController extends BaseController
     }
 
 
+
+
+    //ゴールのデータを返す
+    //引くのはroute_codeのみかな
+    //一つのroute_codeに一つのgoalなのでこれで十分とれる
+    public function callGoal(REQUEST $request){
+        $table = DB::table('goals')
+                    ->where('route_code',"=",$request->route_code)
+                    ->first();
+        return $this->_success(['table'=>$table]);
+    }
+
+
+
+
     //ポイントをテーブルで返す
     //引数  connect_id
     //      route_code
@@ -161,7 +176,7 @@ class gameController extends BaseController
     */
     public function pointJudge(REQUEST $request){
         //返し値初期化
-        $result = false;
+        $result = 0;
         $remainPoint = 0;
         //TEST
         //とりあえず来た　connect_id route_code point_noを使って
@@ -185,11 +200,12 @@ class gameController extends BaseController
                                         $request->longitude,
                                         $pointTable->latitude,
                                         $pointTable->longitude);
-        dump("ポイントNO ".$request->point_no." との距離は：".$distance);
+        //dump("ポイントNO ".$request->point_no." との距離は：".$distance);
 
+        //距離判断
         if($distance <= 50){
             //stampレコードを作成する
-            $result = true;
+            $result = 0;
             $table = new stamp;
             DB::beginTransaction();
             try{
@@ -205,6 +221,8 @@ class gameController extends BaseController
                 throw $exception;
                 return $this->_error(1);
             }
+        }else{//距離外であれば
+            $result=-1;
         }
         //処理後、stampの数を数える
         $stampNum=DB::table('stamps')
