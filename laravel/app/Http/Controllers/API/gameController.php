@@ -292,7 +292,8 @@ class gameController extends BaseController
         $dist = sqrt(($t1*$t1) + ($t2*$t2));
      */
 
-        //測地線航海算法
+
+        //測地線航海算法（２０２２年１月１１日　適応中）
         // 緯度経度をラジアンに変換
         $radLat1 = deg2rad($lat1); // 緯度１
         $radLon1 = deg2rad($lng1); // 経度１
