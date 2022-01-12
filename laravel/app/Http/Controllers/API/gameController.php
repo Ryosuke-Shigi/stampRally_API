@@ -58,8 +58,6 @@ class gameController extends BaseController
     }
 
 
-
-
     //ゴールのデータを返す
     //引くのはroute_codeのみかな
     //一つのroute_codeに一つのgoalなのでこれで十分とれる
@@ -69,8 +67,6 @@ class gameController extends BaseController
                     ->first();
         return $this->_success(['table'=>$table]);
     }
-
-
 
 
     //ポイントをテーブルで返す
@@ -99,7 +95,7 @@ class gameController extends BaseController
                 $status=new status;
                 $status->connect_id=$request->connect_id;
                 $status->route_code=$request->route_code;
-                //$status->started_at=Carbon::now();    //作成日時つけるかどうか
+                $status->started_at=Carbon::now();    //作成日時つけるかどうか
                 $status->save();
                 DB::commit();
             }catch(Esception $exception){
@@ -234,7 +230,6 @@ class gameController extends BaseController
 
         return $this->_success(['result'=>$result,'remainPoint'=>$remainPoint]);
     }
-
 
 
     //二点の経度緯度で距離をメートルで返す

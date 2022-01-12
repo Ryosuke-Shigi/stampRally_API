@@ -11,10 +11,11 @@ use Storage;
 //　取扱各モデル
 use App\models\outuser;
 use App\models\route;
-//use App\models\start;
 use App\models\point;
 use App\models\goal;
+use App\models\score;
 
+use carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -108,7 +109,6 @@ class createController extends BaseController
     //routeにポイント数を保存後、ゴールを登録
     //登録したroute_codeを返却する
     public function goalCreate(REQUEST $request){
-        return 0;
         $table = new goal;
         DB::beginTransaction();
         try{
@@ -131,7 +131,6 @@ class createController extends BaseController
             $table->pict        = $request->pict;
             $table->text        = $request->text;
             $table->save();
-
 
             DB::commit();
 
@@ -163,6 +162,46 @@ class createController extends BaseController
             ->delete();
         return $this->_success();
 
+    }
+
+
+
+    //////////////////////////////////////////////////////
+    //
+    //  スコア関連
+    //
+    //////////////////////////////////////////////////////
+
+    public function scoreCreate(REQUEST $request){
+
+        $statusData = DB::table('statuses')
+                    ->where('connect_id','=',$request->connect_id)
+                    ->where('route_code','=',$request->route_code)
+                    ->first();
+
+        $table = new score;
+        DB::beginTransaction();
+        try{
+            $table->connect_id = $request->connect_id;
+            $table->route_code = $request->route_code;
+            $table->name=$request->name;
+            $table->text=$request->text;
+            $table->started_at = $statusData->started_at;
+            $table->compleated_at = Carbon::now();
+            $table->save();
+            DB::commit();
+
+        }catch(Esception $exception){
+            DB::RollBack();
+            throw $exception;
+            return $this->_error(1);
+        }
+        //クリアしたからステータス・スタンプを削除して、まっさらにする
+        DB::table('statuses')
+        ->where('connect_id','=',$request->connect_id)
+        ->where('route_code','=',$request->route_code)
+        ->delete();
+        return $this->_success();
     }
 
 }

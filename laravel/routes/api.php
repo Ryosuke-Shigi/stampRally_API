@@ -32,9 +32,8 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     Route::post('/keySearchRoutes','api\gameController@keySearchRoutes')->name('keySearchRoutes');
 
 });
-
 //ポイント作成・削除
-Route::group(['prefix'=>'/point','as'=>'start.'],function(){
+Route::group(['prefix'=>'/point','as'=>'point.'],function(){
     //ポイント登録
     Route::post('/create','api\createController@pointCreate')->name('create');
     //ポイント削除
@@ -45,7 +44,7 @@ Route::group(['prefix'=>'/point','as'=>'start.'],function(){
     Route::post('/callPoints','api\gameController@callPoints')->name('callPoints');
 });
 //ゴール作成・削除
-Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
+Route::group(['prefix'=>'/goal','as'=>'goal.'],function(){
     //ゴール設定
     Route::post('/create','api\createController@goalCreate')->name('create');
     //ゴール削除（必要かどうか）
@@ -54,13 +53,18 @@ Route::group(['prefix'=>'/goal','as'=>'start.'],function(){
     //ゴールのデータを返す　route_code　が必要
     Route::post('/callGoal','api\gameController@callGoal')->name('callGoal');
 });
+//スコアの作成・返却
+Route::group(['prefix'=>'/score','as'=>'score.'],function(){
+    //ゴール設定
+    Route::post('/create','api\createController@scoreCreate')->name('create');
 
+});
 
 //stamp関連
 Route::group(['prefix'=>'/game','as'=>'game.'],function(){
+
     //pointをチェックする　条件を満たしていればstampレコードを作成する
     Route::post('/pointJudge','api\gameController@pointJudge')->name('pointJudge');
-
 
 });
 
