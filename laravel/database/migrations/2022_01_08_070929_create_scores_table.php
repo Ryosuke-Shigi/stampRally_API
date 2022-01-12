@@ -28,9 +28,9 @@ class CreateScoresTable extends Migration
             //クリア者コメント
             $table->string('text')->nullable(true);
             //開始日時
-            $table->datetime('started_at')->nullable()->change();
+            $table->datetime('started_at')->nullable(false);
             //ラリー終了日時
-            $table->datetime('compleated_at')->nullable()->change();
+            $table->datetime('compleated_at')->nullable(false);
 
 
             $table->softDeletes();
