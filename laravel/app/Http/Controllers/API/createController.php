@@ -56,7 +56,7 @@ class createController extends BaseController
 
         return $this->_success(['connect_id'=>$table->connect_id]);
     }
-    //ルート登録（ここから start point goal を作成していきます)
+    //ルート登録（ここから point goal を作成していきます)
     //route_codeを返します
     public function routeCreate(REQUEST $request){
         $table = new route;
@@ -143,6 +143,7 @@ class createController extends BaseController
     }
 
     //Connect_IDとroute_IDを受け取り、ルートを削除する
+    //テーブルが存在したらの条件を加えた方がいい？
     public function routeDelete(REQUEST $request){
         //作成していたPOINTのデータを全て削除する
         $pointData=DB::table('points')
@@ -153,6 +154,13 @@ class createController extends BaseController
             if($temp->pict != NULL){
                 Storage::disk('s3')->delete($temp->pict);
             }
+        }
+        $goalData=DB::table('goals')
+            ->where('connect_id','=',$request->connect_id)
+            ->where('route_code','=',$request->route_code)
+            ->first();
+        if($goalData != NULL){
+            Storage::disk('s3')->delete($goalData->pict);
         }
 
         //ルートから連なるデータ削除
@@ -172,20 +180,36 @@ class createController extends BaseController
     //
     //////////////////////////////////////////////////////
 
+    //ゴールした時
     public function scoreCreate(REQUEST $request){
-
+        //名前とコメント
+        $name="";
+        $text="";
+        //クリアしたユーザのステータスを検出
+        //開始時間をとるため
         $statusData = DB::table('statuses')
                     ->where('connect_id','=',$request->connect_id)
                     ->where('route_code','=',$request->route_code)
                     ->first();
 
+        //名前とコメントがない
+        if($request->name!=NULL){
+            $name = $request->name;
+        }else{
+            $name = "John Does";
+        }
+        if($request->text!=NULL){
+            $text = $request->text;
+        }else{
+            $text = "NO COMMENT";
+        }
         $table = new score;
         DB::beginTransaction();
         try{
             $table->connect_id = $request->connect_id;
             $table->route_code = $request->route_code;
-            $table->name=$request->name;
-            $table->text=$request->text;
+            $table->name=$name;
+            $table->text=$text;
             $table->started_at = $statusData->started_at;
             $table->compleated_at = Carbon::now();
             $table->save();

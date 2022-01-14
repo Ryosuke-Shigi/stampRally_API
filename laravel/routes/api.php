@@ -30,7 +30,8 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     Route::post('/allRoutes','api\gameController@allRoutes')->name('allRoutes');
     //keywordで検索したルートを返す
     Route::post('/keySearchRoutes','api\gameController@keySearchRoutes')->name('keySearchRoutes');
-
+    //進行中データを返す
+    Route::post('/progressRoutes','api\gameController@progressRoutes')->name('progressRoutes');
 });
 //ポイント作成・削除
 Route::group(['prefix'=>'/point','as'=>'point.'],function(){
@@ -57,7 +58,8 @@ Route::group(['prefix'=>'/goal','as'=>'goal.'],function(){
 Route::group(['prefix'=>'/score','as'=>'score.'],function(){
     //ゴール設定
     Route::post('/create','api\createController@scoreCreate')->name('create');
-
+    //スコア表示用データ
+    Route::post('/showScore','api\gameController@showScore')->name('showScore');
 });
 
 //stamp関連

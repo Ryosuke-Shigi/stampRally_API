@@ -11,7 +11,6 @@ use Storage;
 //　取扱各モデル
 use App\models\outuser;
 use App\models\route;
-//use App\models\start;
 use App\models\point;
 use App\models\goal;
 use App\models\status;
@@ -42,9 +41,12 @@ class gameController extends BaseController
 
 
     //全てのルートを返す（新規ラリー選択画面用）
+    //publishedが０（公開）のものを返す
+    //新しいものから順番に
     public function allRoutes(REQUEST $request){
         $table = DB::table('routes')
                 ->where('published','=',0)
+                ->latest('updated_at')
                 ->get();
         return $this->_success(['table'=>$table]);
     }
@@ -53,9 +55,66 @@ class gameController extends BaseController
     public function keySearchRoutes(REQUEST $request){
         $table = DB::table('routes')
                     ->where('keyword','LIKE','%'.$request->keyword.'%')
-                    ->get();
+                    ->latest()->get();
         return $this->_success(['table'=>$table]);
     }
+
+    //進行中のルートを返す 引数はconnect_id
+    public function progressRoutes(REQUEST $request){
+        //まず進行中データ（status）を取得する
+        $data = array();
+        $status = DB::table('statuses')
+                    ->where('connect_id','=',$request->connect_id)
+                    ->latest('started_at')->get();
+        //進行中ルート分、まわす
+        foreach($status as $temp){
+            //ステータスから進行中ルートのIDをとり、そのルートのテーブルデータを抽出
+            $route = DB::table('routes')
+                    ->where('route_code','=',$temp->route_code)
+                    ->first();
+            //そのテーブルデータを$dataに追加する
+            array_push($data,$route);
+        }
+        return  $this->_success(['table'=>$data]);
+    }
+
+    //スコアデータを全て返す 引数はconnect_id
+    public function showScore(REQUEST $request){
+        $data = array();
+        $table = DB::table('scores')
+                    //->where('connect_id','=',$request->connect_id)
+                    ->latest('compleated_at')->get();
+        foreach($table as $temp){
+            $route_name="";
+            $route = DB::table('routes')
+                    ->where('route_code','=',$temp->route_code)
+                    ->first();
+            //route_codeから引っかからなければ削除済コード
+            if($route == NULL){
+                $route_name="削除済コース";
+            }else{
+                $route_name=$route->route_name;
+            }
+            $addData=array();
+            $addData+=array(
+                'route_name'=>$route_name,
+                'name'=>$temp->name,
+                'text'=>$temp->text,
+                'started_at'=>$temp->started_at,
+                'compleated_at'=>$temp->compleated_at,
+            );
+            array_push($data,$addData);
+        }
+        return $this->_success(['table'=>$data]);
+    }
+
+
+
+
+
+
+
+
 
 
     //ゴールのデータを返す
