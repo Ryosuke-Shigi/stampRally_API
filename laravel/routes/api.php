@@ -60,6 +60,10 @@ Route::group(['prefix'=>'/score','as'=>'score.'],function(){
     Route::post('/create','api\createController@scoreCreate')->name('create');
     //スコア表示用データ
     Route::post('/showScore','api\gameController@showScore')->name('showScore');
+    //各ルートスコア表示用データ
+    Route::post('/showRouteScore','api\gameController@showRouteScore')->name('showRouteScore');
+
+
 });
 
 //stamp関連

@@ -82,14 +82,43 @@ class gameController extends BaseController
     public function showScore(REQUEST $request){
         $data = array();
         $table = DB::table('scores')
-                    //->where('connect_id','=',$request->connect_id)
+                    ->where('connect_id','=',$request->connect_id)
                     ->latest('compleated_at')->get();
         foreach($table as $temp){
             $route_name="";
             $route = DB::table('routes')
                     ->where('route_code','=',$temp->route_code)
                     ->first();
-            //route_codeから引っかからなければ削除済コード
+            //route_codeから名前をとれなかったら 削除済コード
+            if($route == NULL){
+                $route_name="削除済コース";
+            }else{
+                $route_name=$route->route_name;
+            }
+            $addData=array();
+            $addData+=array(
+                'route_name'=>$route_name,
+                'name'=>$temp->name,
+                'text'=>$temp->text,
+                'started_at'=>$temp->started_at,
+                'compleated_at'=>$temp->compleated_at,
+            );
+            array_push($data,$addData);
+        }
+        return $this->_success(['table'=>$data]);
+    }
+    //コースのスコアを、降順におくる
+    public function showRouteScore(REQUEST $request){
+        $data = array();
+        $table = DB::table('scores')
+                    ->where('route_code','=',$request->route_code)
+                    ->latest('compleated_at')->get();
+        foreach($table as $temp){
+            $route_name="";
+            $route = DB::table('routes')
+                    ->where('route_code','=',$temp->route_code)
+                    ->first();
+            //route_codeから名前をとれなかったら 削除済コード
             if($route == NULL){
                 $route_name="削除済コース";
             }else{
@@ -255,7 +284,6 @@ class gameController extends BaseController
                                         $request->longitude,
                                         $pointTable->latitude,
                                         $pointTable->longitude);
-        //dump("ポイントNO ".$request->point_no." との距離は：".$distance);
 
         //距離判断
         if($distance <= 50){
