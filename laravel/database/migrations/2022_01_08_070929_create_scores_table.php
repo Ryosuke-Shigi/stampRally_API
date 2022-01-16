@@ -36,9 +36,6 @@ class CreateScoresTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            //routesと外部制約　ルートが消えるとスコアも消える
-            $table->foreign('route_code')->references('route_code')->on('routes')->onDelete('cascade')->onUpdate('cascade');
-
         });
     }
 
