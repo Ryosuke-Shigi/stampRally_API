@@ -28,7 +28,7 @@ class createController extends BaseController
     //画像保存　こちらで保存したPATHを返す
     public function createPict(REQUEST $request){
         $image=$request->file('pict');
-        $responce=Storage::disk('s3')->put('/pict',$image,'public-read');
+        $responce=Storage::disk('s3')->put('/pict',$image,'public');
         return $this->_success(['path'=>$responce]);
     }
 
@@ -145,24 +145,33 @@ class createController extends BaseController
     //Connect_IDとroute_IDを受け取り、ルートを削除する
     //テーブルが存在したらの条件を加えた方がいい？
     public function routeDelete(REQUEST $request){
-        //作成していたPOINTのデータを全て削除する
+        //ルートの画像を削除
+        $routeData=DB::table('routes')
+            ->where('connect_id','=',$request->connect_id)
+            ->where('route_code','=',$request->route_code)
+            ->first();
+        if(isset($routeData->pict)){
+            dump($routeData->pict);
+            Storage::disk('s3')->delete($routeData->pict);
+        }
+        //ゴールの画像を削除
+        $goalData=DB::table('goals')
+            ->where('connect_id','=',$request->connect_id)
+            ->where('route_code','=',$request->route_code)
+            ->first();
+        if(isset($goalData->pict)){
+            Storage::disk('s3')->delete($goalData->pict);
+        }
+        //point全ての画像を削除
         $pointData=DB::table('points')
                 ->where('connect_id','=',$request->connect_id)
                 ->where('route_code','=',$request->route_code)
                 ->get();
         foreach($pointData as $temp){
-            if($temp->pict != NULL){
+            if(isset($temp->pict)){
                 Storage::disk('s3')->delete($temp->pict);
             }
         }
-        $goalData=DB::table('goals')
-            ->where('connect_id','=',$request->connect_id)
-            ->where('route_code','=',$request->route_code)
-            ->first();
-        if($goalData != NULL){
-            Storage::disk('s3')->delete($goalData->pict);
-        }
-
         //ルートから連なるデータ削除
         DB::table('routes')
             ->where('connect_id','=',$request->connect_id)
@@ -192,7 +201,7 @@ class createController extends BaseController
                     ->where('route_code','=',$request->route_code)
                     ->first();
 
-        //名前とコメントがない
+        //名前とコメントがあったら
         if($request->name!=NULL){
             $name = $request->name;
         }else{
