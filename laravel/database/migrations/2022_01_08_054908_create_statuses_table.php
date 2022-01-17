@@ -26,7 +26,7 @@ class CreateStatusesTable extends Migration
             //外部接続用ID
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
-            $table->string('route_code')->nullable(false);
+            $table->string('route_code',191)->nullable(false);
             //開始日時が登録される
             $table->datetime('started_at')->nullable(true);
 

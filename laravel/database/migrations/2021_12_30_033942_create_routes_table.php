@@ -19,7 +19,7 @@ class CreateRoutesTable extends Migration
             //外部接続用ID
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
-            $table->string('route_code')->nullable(false);
+            $table->string('route_code',191)->nullable(false);
             //名前　stringはvarchar(255)に自動変換される
             $table->string('route_name')->nullable(false);
             //pointのトータル数
