@@ -19,7 +19,7 @@ class CreateStampsTable extends Migration
             //外部接続用ID
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
-            $table->string('route_code')->nullable(false);
+            $table->string('route_code',191)->nullable(false);
             //取得したポイントのナンバー
             $table->integer('point_no')->nullable(false);
 

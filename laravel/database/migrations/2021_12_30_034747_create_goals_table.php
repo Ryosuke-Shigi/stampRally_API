@@ -19,7 +19,7 @@ class CreateGoalsTable extends Migration
             //外部接続用ID
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
-            $table->string('route_code')->nullable(false);
+            $table->string('route_code',191)->nullable(false);
             //画像
             $table->string("pict")->nullable(true);
             //紹介文

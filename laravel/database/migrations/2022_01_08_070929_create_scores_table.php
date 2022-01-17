@@ -22,7 +22,7 @@ class CreateScoresTable extends Migration
             //外部接続用ID(これを参照して個人を特定できる)
             $table->uuid('connect_id')->comment('外部APIアクセス用ID');
             //ルートのコード
-            $table->string('route_code')->nullable(false);
+            $table->string('route_code',191)->nullable(false);
             //クリア者　名前
             $table->string('name')->nullable(true);
             //クリア者コメント
