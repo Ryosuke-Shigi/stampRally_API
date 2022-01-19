@@ -1,5 +1,9 @@
 <?php
 
+/*gitの大文字小文字勝手に変換をけした
+git config core.ignorecase false
+*/
+
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -26,6 +30,10 @@ class gameController extends BaseController
 {
     //
 
+    public function gametest(){
+        return "game.test";
+    }
+
     //指定コースのポイント数をカウントして返す
     //connect_idとroute_codeが必要
     public function Point_total_num(REQUEST $request){
@@ -38,7 +46,6 @@ class gameController extends BaseController
             ->count();
         return $this->_success(['point_total_num'=>$point_total_num]);
     }
-
 
     //全てのルートを返す（新規ラリー選択画面用）
     //publishedが０（公開）のものを返す

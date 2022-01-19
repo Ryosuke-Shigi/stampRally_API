@@ -17,6 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::post('/test1','api\gameController@gametest')->name('gametest');
+Route::post('/test2','api\createController@createtest')->name('createtest');
+
+
 //ルート作成・削除
 Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     //スタートポイント登録

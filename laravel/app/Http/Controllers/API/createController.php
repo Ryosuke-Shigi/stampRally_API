@@ -22,6 +22,9 @@ use Illuminate\Support\Str;
 
 class createController extends BaseController
 {
+    public function createtest(){
+        return "createtest";
+    }
 
         //画像をＡＷＳに保存
     //スタート・ポイント・ゴールともに作成段階で使用します
