@@ -80,9 +80,8 @@ Route::group(['prefix'=>'/game','as'=>'game.'],function(){
 });
 
 
-
-
 //ユーザを作成して、コンタクト用 connect_id の値を返す
+Route::get('/createUser','api\createController@createUser')->name('createUser');
 Route::post('/createUser','api\createController@createUser')->name('createUser');
 //画像を保存して、PATHを返す
 Route::post('/createPict','api\createController@createPict')->name('createPict');

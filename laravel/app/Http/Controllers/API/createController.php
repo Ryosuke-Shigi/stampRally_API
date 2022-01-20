@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Log;
 use Storage;
 
 //　取扱各モデル
-use App\models\outuser;
-use App\models\route;
-use App\models\point;
-use App\models\goal;
-use App\models\score;
+use App\Models\outuser;
+use App\Models\route;
+use App\Models\point;
+use App\Models\goal;
+use App\Models\score;
 
 use carbon\Carbon;
 
