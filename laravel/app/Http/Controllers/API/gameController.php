@@ -51,6 +51,7 @@ class gameController extends BaseController
     public function myRoutes(REQUEST $request){
         $table = DB::table('routes')
                 ->where('connect_id','=',$request->connect_id)
+                ->latest('updated_at')
                 ->get();
         return $this->_success(['table'=>$table]);
     }
