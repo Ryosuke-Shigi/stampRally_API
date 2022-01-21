@@ -33,6 +33,9 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     //ルート選択
     //全てのルートの値を返す
     Route::post('/allRoutes','api\gameController@allRoutes')->name('allRoutes');
+    //自分のルートの値を返す
+    Route::post('/myRoutes','api\gameController@myRoutes')->name('myRoutes');
+
     //keywordで検索したルートを返す
     Route::post('/keySearchRoutes','api\gameController@keySearchRoutes')->name('keySearchRoutes');
     //進行中データを返す

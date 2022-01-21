@@ -47,6 +47,14 @@ class gameController extends BaseController
         return $this->_success(['point_total_num'=>$point_total_num]);
     }
 
+    //自身が作成したルートを返す
+    public function myRoutes(REQUEST $request){
+        $table = DB::table('routes')
+                ->where('connect_id','=',$request->connect_id)
+                ->get();
+        return $this->_success(['table'=>$table]);
+    }
+
     //全てのルートを返す（新規ラリー選択画面用）
     //publishedが０（公開）のものを返す
     //新しいものから順番に
