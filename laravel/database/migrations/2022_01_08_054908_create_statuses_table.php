@@ -33,8 +33,7 @@ class CreateStatusesTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            //同じコースで作成はできないようにする
-            $table->unique(['route_code']);
+            $table->unique(['connect_id','route_code']);
 
             //outusersと外部制約
             $table->foreign('connect_id')->references('connect_id')->on('outusers')->onDelete('cascade')->onUpdate('cascade');
