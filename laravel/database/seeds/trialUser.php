@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\models\outuser;
 
-class testUserSeeder extends Seeder
+class trialUser extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +15,9 @@ class testUserSeeder extends Seeder
     {
         //
         DB::table('outusers')->insert([
-            'user_id'=>'testuser',
-            'connect_id'=>'033bd197-5a64-46af-9695-a3d8117daa0f',
-            'email'=>'testuser@gmail.com',
+            'user_id'=>'trialuser',
+            'connect_id'=>'d1261205-2835-45b9-ad9a-fb2a153c388a',
+            'email'=>'trial@gmail.com',
         ]);
     }
 }
