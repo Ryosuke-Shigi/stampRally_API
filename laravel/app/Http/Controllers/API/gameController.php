@@ -94,12 +94,16 @@ class gameController extends BaseController
         return  $this->_success(['table'=>$data]);
     }
 
-    //スコアデータを全て返す 引数はconnect_id
+    //ユーザの全てのスコアデータを降順で返す 引数はconnect_id
     public function showScore(REQUEST $request){
         $data = array();
+        //ユーザのスコアデータを全て取得する
         $table = DB::table('scores')
                     ->where('connect_id','=',$request->connect_id)
                     ->latest('compleated_at')->get();
+        //取得したユーザのスコアデータ分、繰り返す
+        //もし、そのルートコードが存在しない（ルートが削除されている場合）
+        //削除済コースという名前で返す
         foreach($table as $temp){
             $route_name="";
             $route = DB::table('routes')
@@ -123,7 +127,7 @@ class gameController extends BaseController
         }
         return $this->_success(['table'=>$data]);
     }
-    //コースのスコアを、降順におくる
+    //各コースのスコアを、降順で返す
     public function showRouteScore(REQUEST $request){
         $data = array();
         $table = DB::table('scores')

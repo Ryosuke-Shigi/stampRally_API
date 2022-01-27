@@ -39,11 +39,21 @@ class createController extends BaseController
     //アプリ側でユーザ登録した段階で一緒に作成
     //個人を特定するID connect_id を　UUID で生成する。
     //outusersに登録されます
+    //テーブル内をemalで検索し、該当するものがあればそのコネクトIDを返せば
+    //別のプログラムでのアクセスも可能に
     public function createUser(REQUEST $request){
+/*         $email = DB::table('outusers')
+            ->where('email','=',$request->email)
+            ->first();
+        if($email == false){
+            //登録処理
+        }else{
+            //コネクトＩＤを返す
+        } */
+
         DB::beginTransaction();
         try{
             $table = new outuser;
-
             $table->user_id = $request->user_id;
             $table->email = $request->email;
             $table->connect_id = (string)Str::uuid();
