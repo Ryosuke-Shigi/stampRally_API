@@ -47,7 +47,7 @@ class gameController extends BaseController
         return $this->_success(['point_total_num'=>$point_total_num]);
     }
 
-    //自身が作成したルートを返す
+    //自身が作成したルートを返す（デリート選択に使用）
     public function myRoutes(REQUEST $request){
         $table = DB::table('routes')
                 ->where('connect_id','=',$request->connect_id)
@@ -57,7 +57,7 @@ class gameController extends BaseController
     }
 
     //全てのルートを返す（新規ラリー選択画面用）
-    //publishedが０（公開）のものを返す
+    //publishedが０（公開）のものを返す これを利用して　ゴールまで完成していなかったら publishedはー１のまま　とかで使えるように
     //新しいものから順番に
     public function allRoutes(REQUEST $request){
         $table = DB::table('routes')
@@ -68,9 +68,15 @@ class gameController extends BaseController
     }
 
     //キーワードで検索したルートを返す（非公開含めて）
+    //キーワードに設定したものであればよい 空白の場合も想定すべき
+    //それをこちらでやっておかないといけない
+    //published関係なしに作成しておけば、非公開も選択できる・・・といった形
+    //現在作成中とか　つくる場合はpublishedで何か別の決まった値を使うようにするほうがいい
     public function keySearchRoutes(REQUEST $request){
+
         $table = DB::table('routes')
                     ->where('keyword','LIKE','%'.$request->keyword.'%')
+                    ->where('published','=',0)
                     ->latest()->get();
         return $this->_success(['table'=>$table]);
     }

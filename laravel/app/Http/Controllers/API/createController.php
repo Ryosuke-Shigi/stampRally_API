@@ -69,8 +69,18 @@ class createController extends BaseController
 
         return $this->_success(['connect_id'=>$table->connect_id]);
     }
+
+    ////////////////////////////////////////////////////////////
+    //
+    //  ラリー作成
+    //
+    ////////////////////////////////////////////////////////////
+
     //ルート登録（ここから point goal を作成していきます)
     //route_codeを返します
+    //引数にmodeが必要
+    //mode 0 で通常の作成
+    //mode 1 でnowTravel作成
     public function routeCreate(REQUEST $request){
         $table = new route;
         DB::beginTransaction();
@@ -82,7 +92,15 @@ class createController extends BaseController
             $table->keyword = $request->keyword;
             $table->text = $request->text;
             //公開・非公開　現状は０で固定しておく
-            $table->published=0;
+            //通常作成とnowTravel分岐
+            //０であれば通常作成 それ以外なら通常作成
+            if($request->mode != 0){
+                //nowTravel
+                $table->published=2;
+            }else{
+                //通常作成
+                $table->published=-1;
+            }
             //ポイントを全て設定し終えたら後から値が入ります。
             $table->point_total_num = 0;
             $table->save();
@@ -134,9 +152,11 @@ class createController extends BaseController
             $routeTable = route::where('connect_id','=',$request->connect_id)
                                 ->where('route_code','=',$request->route_code)
                                 ->first();
+            //ポイント数を入れる
             $routeTable->point_total_num = $point_total_num;
+            //公開状態にする 元がなんであれ公開にする
+            $routeTable->published = 0;
             $routeTable->save();
-
 
             //ゴールをを保存する
             $table->connect_id  = $request->connect_id;
@@ -155,6 +175,21 @@ class createController extends BaseController
         return $this->_success(['route_code'=>$table->route_code]);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //Connect_IDとroute_IDを受け取り、ルートを削除する
     //テーブルが存在したらの条件を加えた方がいい？
     public function routeDelete(REQUEST $request){
@@ -164,7 +199,6 @@ class createController extends BaseController
             ->where('route_code','=',$request->route_code)
             ->first();
         if(isset($routeData->pict)){
-            dump($routeData->pict);
             Storage::disk('s3')->delete($routeData->pict);
         }
         //ゴールの画像を削除
@@ -202,7 +236,7 @@ class createController extends BaseController
     //
     //////////////////////////////////////////////////////
 
-    //ゴールした時
+    //ゴールした時 スコアを作成して取得スタンプをクリアする
     public function scoreCreate(REQUEST $request){
         //名前とコメント
         $name="";
