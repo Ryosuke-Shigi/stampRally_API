@@ -40,6 +40,9 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     Route::post('/keySearchRoutes','api\gameController@keySearchRoutes')->name('keySearchRoutes');
     //進行中データを返す
     Route::post('/progressRoutes','api\gameController@progressRoutes')->name('progressRoutes');
+
+    //nowTravel 作成中のルートがあるかどうかを返す（あればルートコードとポイント数を返す）
+    Route::post('/reasonNowTravelRoute','api\createController@reasonNowTravelRoute')->name('reasonNowTravelRoute');
 });
 //ポイント作成・削除
 Route::group(['prefix'=>'/point','as'=>'point.'],function(){
@@ -49,8 +52,11 @@ Route::group(['prefix'=>'/point','as'=>'point.'],function(){
     Route::get('/delete','api\createController@pointDelete')->name('delete');
     //point_total_num カウント
     Route::get('/point_total_num','api\gameController@point_total_num')->name('point_total_num');
-    //チェックポイントを返す
+    //ゲーム用　チェックポイントを返す(攻略済みは表示しない)
     Route::post('/callPoints','api\gameController@callPoints')->name('callPoints');
+    //ルートのポイントを返す（作成用）
+    Route::post('/routePoints','api\createController@routePoints')->name('routePoints');
+
 });
 //ゴール作成・削除
 Route::group(['prefix'=>'/goal','as'=>'goal.'],function(){
@@ -70,16 +76,15 @@ Route::group(['prefix'=>'/score','as'=>'score.'],function(){
     Route::post('/showScore','api\gameController@showScore')->name('showScore');
     //各ルートスコア表示用データ
     Route::post('/showRouteScore','api\gameController@showRouteScore')->name('showRouteScore');
-
-
 });
+
+
+
 
 //stamp関連
 Route::group(['prefix'=>'/game','as'=>'game.'],function(){
-
     //pointをチェックする　条件を満たしていればstampレコードを作成する
     Route::post('/pointJudge','api\gameController@pointJudge')->name('pointJudge');
-
 });
 
 

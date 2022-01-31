@@ -209,7 +209,7 @@ class gameController extends BaseController
                 $status=new status;
                 $status->connect_id=$request->connect_id;
                 $status->route_code=$request->route_code;
-                $status->started_at=Carbon::now();    //作成日時つけるかどうか
+                $status->started_at=Carbon::now();
                 $status->save();
                 DB::commit();
             }catch(Esception $exception){
@@ -257,6 +257,8 @@ class gameController extends BaseController
         }
         return $this->_success(['table'=>$data]);
     }
+
+
 
 
 

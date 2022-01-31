@@ -70,6 +70,42 @@ class createController extends BaseController
         return $this->_success(['connect_id'=>$table->connect_id]);
     }
 
+
+    //ポイントをテーブルで返す
+    //引数  connect_id
+    //      route_code
+    //statusがなければ自動的に作成　スタンプラリーを開始する
+    //スタートの時間はとるが、現状では使わない（時間が短いほどいい　をなくすため）
+    public function routePoints(REQUEST $request){
+        $data = array();
+        $pointNum =0;
+
+        $routeTable = DB::table('points')
+                    ->where('connect_id','=',$request->connect_id)
+                    ->where('route_code','=',$request->route_code)
+                    ->get();
+
+        //routeの全てのポイントデータを送る
+        foreach($routeTable as $route){
+            array_push($data,array(
+                'point_no'=>$route->point_no,
+                'latitude'=>$route->latitude,
+                'longitude'=>$route->longitude,
+                'pict'=>$route->pict,
+                'text'=>$route->text
+            ));
+        }
+
+        if($routeTable->count()==false){
+            $data=-1;
+            $pointNum=0;
+        }else{
+            $pointNum=$routeTable->count();
+        }
+
+        return $this->_success(['table'=>$data,'pointNum'=>$pointNum]);
+    }
+
     ////////////////////////////////////////////////////////////
     //
     //  ラリー作成
@@ -93,7 +129,7 @@ class createController extends BaseController
             $table->text = $request->text;
             //公開・非公開　現状は０で固定しておく
             //通常作成とnowTravel分岐
-            //０であれば通常作成 それ以外なら通常作成
+            //０であればnowTravel それ以外なら通常作成
             if($request->mode != 0){
                 //nowTravel
                 $table->published=2;
@@ -175,21 +211,6 @@ class createController extends BaseController
         return $this->_success(['route_code'=>$table->route_code]);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //Connect_IDとroute_IDを受け取り、ルートを削除する
     //テーブルが存在したらの条件を加えた方がいい？
     public function routeDelete(REQUEST $request){
@@ -227,6 +248,55 @@ class createController extends BaseController
         return $this->_success();
 
     }
+
+    //////////////////////////////////////////////////////
+    //
+    //  nowTravel
+    //
+    //////////////////////////////////////////////////////
+
+    //作成中のものがあるかどうかを返す
+    // connect_id が必要
+    public function reasonNowTravelRoute(REQUEST $request){
+        $reason=false;//存在フラグ
+        $pointNum = 0; //ポイント数
+        $route_code="";
+        $route_name="";
+        //routesからnowTravelで作成中のものを探す
+        //publishedが２のrouteのレコードを探す
+        $now=DB::table('routes')
+            ->where('connect_id','=',$request->connect_id)
+            ->where('published','=',2)
+            ->first();
+        //存在しなければ
+        if($now == null){
+            $reason=false;
+            $pointNum=0;
+            $route_code="";
+            $route_name="";
+        }else{  //存在していれば
+            $reason=true;
+            $pointNum=DB::table('points')
+                ->where('connect_id','=',$request->connect_id)
+                ->where('route_code','=',$now->route_code)
+                ->count();
+            $route_code=$now->route_code;
+            $route_name=$now->route_name;
+        }
+
+        //reason：存在しているか
+        //あればroute_codeと、ポイント数を返す
+        //なければreason：false route_codeは""
+        return $this->_success([
+            'reason'=>$reason,
+            'route_code'=>$route_code,
+            'route_name'=>$route_name,
+            'pointNum'=>$pointNum,
+        ]);
+    }
+
+
+
 
 
 
