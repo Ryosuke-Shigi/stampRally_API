@@ -18,9 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::post('/test1','api\gameController@gametest')->name('gametest');
-Route::post('/test2','api\createController@createtest')->name('createtest');
-
 
 //ルート作成・削除
 Route::group(['prefix'=>'/route','as'=>'route.'],function(){
@@ -29,8 +26,6 @@ Route::group(['prefix'=>'/route','as'=>'route.'],function(){
     //スタートポイント削除
     Route::get('/delete','api\createController@routeDelete')->name('delete');
 
-    //ゲーム部分
-    //ルート選択
     //全てのルートの値を返す
     Route::post('/allRoutes','api\gameController@allRoutes')->name('allRoutes');
     //自分のルートの値を返す

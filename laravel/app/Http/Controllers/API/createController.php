@@ -9,24 +9,21 @@ use Illuminate\Support\Facades\Log;
 use Storage;
 
 //　取扱各モデル
-use App\Models\outuser;
-use App\Models\route;
-use App\Models\point;
-use App\Models\goal;
-use App\Models\score;
+use App\Models\outuser; //ユーザ
+use App\Models\route;   //ルート
+use App\Models\point;   //ルートのポイント
+use App\Models\goal;    //ルートのゴール
+use App\Models\score;   //スコア
 
-use carbon\Carbon;
+use carbon\Carbon;      //時間用
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class createController extends BaseController
 {
-    public function createtest(){
-        return "createtest";
-    }
 
-        //画像をＡＷＳに保存
+    //画像をＡＷＳに保存
     //スタート・ポイント・ゴールともに作成段階で使用します
     //画像保存　こちらで保存したPATHを返す
     public function createPict(REQUEST $request){

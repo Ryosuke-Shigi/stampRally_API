@@ -28,11 +28,6 @@ use Illuminate\Support\Str;
 
 class gameController extends BaseController
 {
-    //
-
-    public function gametest(){
-        return "game.test";
-    }
 
     //指定コースのポイント数をカウントして返す
     //connect_idとroute_codeが必要
@@ -90,7 +85,7 @@ class gameController extends BaseController
                     ->latest('started_at')->get();
         //進行中ルート分、まわす
         foreach($status as $temp){
-            //ステータスから進行中ルートのIDをとり、そのルートのテーブルデータを抽出
+            //ステータスから進行中ルートのIDをとり、そのルートのrouteデータを抽出
             $route = DB::table('routes')
                     ->where('route_code','=',$temp->route_code)
                     ->first();
