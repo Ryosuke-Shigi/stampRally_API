@@ -4,9 +4,10 @@
 git config core.ignorecase false
 */
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\api\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -21,7 +22,7 @@ use App\Models\status;
 use App\Models\score;
 use App\Models\stamp;
 
-use carbon\Carbon;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -36,11 +37,15 @@ class gameController extends BaseController
         if(!$request->has('route_code')){
                 return $this->_error(1);
         }
+        //ポイント数を数える
         $point_total_num=DB::table('points')
             ->where('route_code','=',$request->route_code)
             ->count();
         return $this->_success(['point_total_num'=>$point_total_num]);
     }
+
+
+
 
     //自身が作成したルートを返す（デリート選択に使用）
     public function myRoutes(REQUEST $request){
@@ -62,11 +67,7 @@ class gameController extends BaseController
         return $this->_success(['table'=>$table]);
     }
 
-    //キーワードで検索したルートを返す（非公開含めて）
-    //キーワードに設定したものであればよい 空白の場合も想定すべき
-    //それをこちらでやっておかないといけない
-    //published関係なしに作成しておけば、非公開も選択できる・・・といった形
-    //現在作成中とか　つくる場合はpublishedで何か別の決まった値を使うようにするほうがいい
+    //キーワードで検索したルートを返す
     public function keySearchRoutes(REQUEST $request){
 
         $table = DB::table('routes')
@@ -76,7 +77,7 @@ class gameController extends BaseController
         return $this->_success(['table'=>$table]);
     }
 
-    //進行中のルートを返す 引数はconnect_id
+    //進行中のルートを返す 引数はconnect_id 降順
     public function progressRoutes(REQUEST $request){
         //まず進行中データ（status）を取得する
         $data = array();
@@ -97,26 +98,36 @@ class gameController extends BaseController
 
     //ユーザの全てのスコアデータを降順で返す 引数はconnect_id
     public function showScore(REQUEST $request){
-        $data = array();
+        //変数初期化
+        $data = array();//テーブルデータ返し値用
+
         //ユーザのスコアデータを全て取得する
         $table = DB::table('scores')
                     ->where('connect_id','=',$request->connect_id)
                     ->latest('compleated_at')->get();
+
         //取得したユーザのスコアデータ分、繰り返す
         //もし、そのルートコードが存在しない（ルートが削除されている場合）
         //削除済コースという名前で返す
         foreach($table as $temp){
-            $route_name="";
+            //変数初期化
+            $route_name="";//ルート名
+            $addData=array();//テーブルデータ追加用配列
+
+            //ルートデータを取得
             $route = DB::table('routes')
                     ->where('route_code','=',$temp->route_code)
                     ->first();
-            //route_codeから名前をとれなかったら 削除済コード
+
+            //ルートが削除されていれば、削除済みコースとして返す
             if($route == NULL){
                 $route_name="削除済コース";
             }else{
                 $route_name=$route->route_name;
             }
-            $addData=array();
+
+            //テーブルデータをまとめて返すため、一度配列にまとめる
+            //この時、削除済みであれば名前を削除済コースにしている
             $addData+=array(
                 'route_name'=>$route_name,
                 'name'=>$temp->name,
@@ -128,12 +139,18 @@ class gameController extends BaseController
         }
         return $this->_success(['table'=>$data]);
     }
+
     //各コースのスコアを、降順で返す
     public function showRouteScore(REQUEST $request){
-        $data = array();
+        //変数初期化
+        $data = array();//返し値用配列
+
+        //コースのスコアデータを取得 降順
         $table = DB::table('scores')
                     ->where('route_code','=',$request->route_code)
                     ->latest('compleated_at')->get();
+
+        //取得したデータで削除済みのルートがないか検出
         foreach($table as $temp){
             $route_name="";
             $route = DB::table('routes')
@@ -160,22 +177,15 @@ class gameController extends BaseController
 
 
 
-
-
-
-
-
-
-
     //ゴールのデータを返す
-    //引くのはroute_codeのみかな
-    //一つのroute_codeに一つのgoalなのでこれで十分とれる
+    //引数 route_code
     public function callGoal(REQUEST $request){
         $table = DB::table('goals')
                     ->where('route_code',"=",$request->route_code)
                     ->first();
         return $this->_success(['table'=>$table]);
     }
+
 
 
     //ポイントをテーブルで返す
@@ -186,13 +196,16 @@ class gameController extends BaseController
     public function callPoints(REQUEST $request){
         $data = array();
 
+        //ルートのポイントデータを全て取得
         $routeTable = DB::table('points')
                     ->where('route_code','=',$request->route_code)
                     ->get();
+        //ユーザのルートへの状態を取得
         $userStatus = DB::table('statuses')
                     ->where('connect_id','=',$request->connect_id)
                     ->where('route_code','=',$request->route_code)
                     ->first();
+
         //ユーザがまだはじめていないラリーであれば
         //statusesにデータを作成して　全てのデータを返す
         //もし存在していれば、まだチェックしていないポイントを返却する
@@ -277,8 +290,6 @@ class gameController extends BaseController
             result->true remainPoint->残りポイント数　を返す
             離れていれば
             result->false remainPoint->残りポイント数で返す
-
-            ポイントが０になれば、
 
     */
     public function pointJudge(REQUEST $request){
