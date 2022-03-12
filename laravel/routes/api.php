@@ -51,7 +51,8 @@ Route::group(['prefix'=>'/point','as'=>'point.'],function(){
     Route::post('/callPoints','api\gameController@callPoints')->name('callPoints');
     //ルートのポイントを返す（作成用）
     Route::post('/routePoints','api\createController@routePoints')->name('routePoints');
-
+    //残りポイント数を返す
+    Route::post('/remainPoint','api\gameController@remainPoint')->name('remainPoint');
 });
 //ゴール作成・削除
 Route::group(['prefix'=>'/goal','as'=>'goal.'],function(){

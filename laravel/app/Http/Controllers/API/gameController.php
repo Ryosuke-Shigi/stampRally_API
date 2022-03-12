@@ -301,6 +301,7 @@ class gameController extends BaseController
         //stampテーブルにレコードをつっこむ
         //距離関係なしでOKをだす
 
+        //ポイント数取得
         $pointNum=DB::table('points')
             ->where('route_code','=',$request->route_code)
             ->count();
@@ -350,6 +351,25 @@ class gameController extends BaseController
         $remainPoint = $pointNum - $stampNum;
 
         return $this->_success(['result'=>$result,'remainPoint'=>$remainPoint]);
+    }
+
+
+    //残りポイント数を返す（ルート選択後の判断をするためのもの）
+    //途中で処理を分断された時の対応用
+    // connect_idとroute_codeが必要
+    public function remainPoint(REQUEST $request){
+        //ポイント数取得
+        $pointNum=DB::table('points')
+            ->where('route_code','=',$request->route_code)
+            ->count();
+
+        $stampNum=DB::table('stamps')
+        ->where('connect_id','=',$request->connect_id)
+        ->where('route_code','=',$request->route_code)
+        ->count();
+        //残りポイント数を返す
+        $remainPoint = $pointNum - $stampNum;
+        return $this->_success(['result'=>0,'remainPoint'=>$remainPoint]);
     }
 
 
